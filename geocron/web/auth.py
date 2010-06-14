@@ -1,7 +1,8 @@
-from flask import Module, g, redirect, request, session
+from flask import Module, g, redirect, render_template, request, session
 from geocron import settings
 from openid.consumer.consumer import Consumer
 from openid.store.filestore import FileOpenIDStore
+from openid.yadis.discover import DiscoveryFailure
 import oauth2 as oauth
 import urllib
 import urlparse
@@ -34,7 +35,10 @@ def login():
     
     # create consumer and make create request
     openid_consumer = Consumer(session['openid_session'], FileOpenIDStore('/tmp/'))
-    auth_request = openid_consumer.begin(OPENID_ENDPOINT)
+    try:
+        auth_request = openid_consumer.begin(OPENID_ENDPOINT)
+    except DiscoveryFailure, df:
+        return render_template("500.html", error=df)
     
     # this is where attribute exchange stuff should be added
     
