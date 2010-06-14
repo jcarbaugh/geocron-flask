@@ -58,3 +58,11 @@ def login_auth():
     session['access_secret'] = access_token['oauth_token_secret']
     
     return redirect("/")
+
+@auth.route('/logout')
+def logout():
+    if 'access_token' in session:
+        session.pop('access_token')
+    if 'access_secret' in session:
+        session.pop('access_secret')
+    return redirect("/")
