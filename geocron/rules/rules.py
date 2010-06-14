@@ -1,10 +1,10 @@
 
-from settings import *
+from geocron import settings
 from pymongo import Connection
 from datetime import datetime
 
-connection = Connection(HOST, PORT)
-db = connection[DATABASE_NAME]
+connection = Connection(settings.MONGODB_HOST, settings.MONGODB_PORT)
+db = connection[settings.MONGODB_DB]
 
 # Function to add a rule to a user document
 # the kwargs is a dict containing the attributes of the rule
