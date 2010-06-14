@@ -2,9 +2,22 @@
 from settings import *
 from pymongo import Connection
 from datetime import datetime
-
+from actions import *
 connection = Connection(HOST, PORT)
 db = connection[DATABASE_NAME]
+
+#Python has a bug(gasp!) that doesn't allow unicode characters in keys of dicts that are expanded using the **kwargs notation. 
+#I guess the keys get converted in the pymongo wrapper, so we use this function to convert back
+def convert_from_unicode(data):
+    if isinstance(data, unicode):
+        return str(data)
+    elif isinstance(data, dict):
+        return dict(map(convert_from_unicode, data.iteritems()))
+    elif isinstance(data, (list, tuple, set, frozenset)):
+        return type(data)(map(convert_from_unicode, data))
+    else:
+        return data
+
 
 # Function to add a rule to a user document
 # the kwargs is a dict containing the attributes of the rule
@@ -29,15 +42,6 @@ db = connection[DATABASE_NAME]
 #   'valid_start_time': '06:00',
 #   'valid_end_time': '13:00',
 # }
-def convert_from_unicode(data):
-    if isinstance(data, unicode):
-        return str(data)
-    elif isinstance(data, dict):
-        return dict(map(convert_from_unicode, data.iteritems()))
-    elif isinstance(data, (list, tuple, set, frozenset)):
-        return type(data)(map(convert_from_unicode, data))
-    else:
-        return data
 
 def debug(user):
     print user
@@ -132,6 +136,7 @@ def check(email, current_location):
         for r in user['rules']:
             if test_location(current_location, **convert_from_unicode(r)) and test_time(**convert_from_unicode(r)):
                 #do action
+                execute_action(email, **convert_from_unicode(r))
                 print 'execute action!'
 
     else:
@@ -142,8 +147,8 @@ if __name__ == "__main__":
 
     #msg = delete_rule('katycorp@gmail.com', 'send an email')
 
-    msg = set_rule("katycorp@gmail.com", name="time conditions", action_type="email", email_address="someone@bla.net", location=[2, 2], valid_days=[1,2,3,4,5], valid_start_time='12:00', valid_end_time='20:00')
-    print msg
+    msg = update_rule("katycorp@gmail.com", 'time conditions', name="time conditions", action_type="email", email_text="hi", email_address="klee@sunlightfoundation.com", location=[2, 2], valid_days=[1,2,3,4,5], valid_start_time='12:00', valid_end_time='20:00')
+    #print msg
 
     check('katycorp@gmail.com', [2, 2])
 
