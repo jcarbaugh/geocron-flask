@@ -1,3 +1,4 @@
 Flask
 pymongo
+python-openid==2.2.4
 -e git+http://github.com/simplegeo/python-oauth2.git#egg=oauth2
