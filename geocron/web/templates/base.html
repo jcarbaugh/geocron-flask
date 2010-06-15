@@ -19,7 +19,11 @@
         <nav class="container_12">
             <div class="grid_12">
             <ul>
+                {% if g.user == None %}
                 <li><a href="/login">Login</a>&nbsp;|</li>
+                {% else %}
+                <li>{{ g.user['_id'] }}</li>&nbsp;|</li>
+                {% endif %}
                 <li><a href="/logout">Logout</a></li>
             </ul>
             </div>

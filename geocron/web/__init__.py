@@ -34,7 +34,10 @@ def hello():
     else:
         content = ""
     
-    return render_template('hello.html', content=content)
+    if g.user == None:
+        return render_template('hello.html', content=content)
+    else:
+        return render_template('rules.html')
 
 @application.route("/users")
 def user_list():
