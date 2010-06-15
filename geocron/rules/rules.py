@@ -48,6 +48,9 @@ def convert_from_unicode(data):
 #   'valid_start_time': '06:00',
 #   'valid_end_time': '13:00',
 # }
+#
+# For SMS, make sure 'phone_number', 'phone_carrier' and 
+# 'sms' are present
 
 def debug(user):
     print user
@@ -166,7 +169,7 @@ if __name__ == "__main__":
 
     #delete_rule('katycorp@gmail.com', 'send one email')
 
-    msg = update_rule("katycorp@gmail.com", "url test",  name="url test", action_type="webhook", method="POST", callback_url="http://www.google.com" , location=[38.993496, -77.032399], valid_days=[1,2,3,4,5], valid_start_time='12:00', valid_end_time='20:00')
+    msg = update_rule("katycorp@gmail.com", "url test",  name="ama test", phone_number=8605935117, phone_carrier='att', sms='HEEEYYY', action_type="sms", location=[38.993496, -77.032399], valid_days=[1,2,3,4,5], valid_start_time='12:00', valid_end_time='20:00')
     #print msg
 
     check('katycorp@gmail.com', [38.991929, -77.032228])
