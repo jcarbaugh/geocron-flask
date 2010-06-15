@@ -25,12 +25,11 @@ if __name__ == "__main__":
             timestamps = [l['timestampMs'] for l in user['locations']]
             
             latitude = Latitude(oauth['token'], oauth['secret'])
-            for location in latitude.locations(granularity='best')['data']['items']:
+            location = latitude.current_location()['data']
                 
-                if location['timestampMs'] not in timestamps:
-                    user['locations'].append(location)
-                    print "!!!", location
-                    rules.check(None, location)
+            if location['timestampMs'] not in timestamps:
+                user['locations'].append(location)
+                rules.check(user['_id'], location)
         
         users.save(user)
         
