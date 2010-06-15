@@ -35,3 +35,11 @@ def hello():
         content = "asdfasdf"
     
     return render_template('base.html', content=content)
+
+@application.route("/users")
+def user_list():
+    users = g.db.users.find()
+    for user in users:
+        l = Latitude(user['oauth']['token'], user['oauth']['secret'])
+        print l.locations(granularity='best')
+    return render_template('user_list.html', users=g.db.users.find())

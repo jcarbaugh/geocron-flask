@@ -29,7 +29,7 @@ class Latitude(object):
         headers = oauth_request.to_header(realm='http://*.geocron.us')
 
         if params:
-            resource_url = "%s?%s" % (resource_url, urllib.urlencode(parameters))
+            resource_url = "%s?%s" % (resource_url, urllib.urlencode(params))
 
         self._conn.request('GET', resource_url, headers=headers)
         response = self._conn.getresponse()
