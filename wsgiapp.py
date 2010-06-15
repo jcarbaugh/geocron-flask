@@ -19,6 +19,8 @@ if not settings.DEBUG:
     file_handler.setLevel(logging.WARNING)
     application.logger.addHandler(file_handler)
 
+application.secret_key = settings.SECRET_KEY
+
 applications = {
     '/': application,
 }
