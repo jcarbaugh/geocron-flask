@@ -7,7 +7,7 @@ if not settings.DEBUG:
     from logging.handlers import SMTPHandler
     mail_handler = SMTPHandler(settings.SMTP_HOST,
                                'geocron.us@gmail.com',
-                               ADMINS,
+                               settings.ADMINS,
                                'Our application failed',
                                (settings.SMTP_USER, settings.SMTP_PASSWORD))
     mail_handler.setLevel(logging.ERROR)
