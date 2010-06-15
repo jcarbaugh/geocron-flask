@@ -1,6 +1,12 @@
 import smtplib
+import urllib
 from email.mime.text import MIMEText
 
+class DataError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    def __str__(self):
+        return repr(self.msg)
 
 def execute_action(email, **rule):
 
@@ -8,9 +14,9 @@ def execute_action(email, **rule):
         try:
             globals()['execute_'+rule['action_type']](email, **rule)
         except KeyError:
-            print "no function"
+            raise Exception('No function defined for this action type')
     else:
-        print 'no action'
+        raise DataError('No action type defined for this rule')
 
 def execute_email(email, **rule):
 
@@ -25,4 +31,13 @@ def execute_email(email, **rule):
         s.quit()
 
     else: 
-        print "no email address or text"
+        raise DataError('No email address or email text is defined for this rule')
+
+def execute_webhook(email, **rule):
+    
+    if rule.has_key('callback_url') and rule.has_key('method'):
+        response = urllib.urlopen(rule['callback_url'], data=rule['method'])
+
+    else:
+        raise DataError('This rule has no callback url or method')
+
