@@ -44,10 +44,10 @@ def login():
     extras = {
         "openid.ns.ax": "http://openid.net/srv/ax/1.0",
         "openid.ax.mode": "fetch_request",
-        "openid.ax.required": "email,firstname,lastname",
+        "openid.ax.required": "email",
         "openid.ax.type.email": "http://axschema.org/contact/email",
-        "openid.ax.type.firstname": "http://axschema.org/namePerson/first",
-        "openid.ax.type.lastname": "http://axschema.org/namePerson/last",
+        #"openid.ax.type.firstname": "http://axschema.org/namePerson/first",
+        #"openid.ax.type.lastname": "http://axschema.org/namePerson/last",
     }
     
     # generate OpenID request redirect URL
