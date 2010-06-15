@@ -41,10 +41,19 @@ def login():
         return render_template("500.html", error=df)
     
     # this is where attribute exchange stuff should be added
+    extras = {
+        "openid.ns.ax": "http://openid.net/srv/ax/1.0",
+        "openid.ax.mode": "fetch_request",
+        "openid.ax.required": "email,firstname,lastname",
+        "openid.ax.type.email": "http://axschema.org/contact/email",
+        "openid.ax.type.firstname": "http://axschema.org/namePerson/first",
+        "openid.ax.type.lastname": "http://axschema.org/namePerson/last",
+    }
     
     # generate OpenID request redirect URL
     url = auth_request.redirectURL(REALM, return_to=OPENID_CALLBACK_URL)
-    return redirect(url)
+    
+    return redirect("%s&%s" % (url, urllib.urlencode(extras)))
 
 @auth.route('/login/auth')
 def login_auth():
@@ -58,7 +67,7 @@ def login_auth():
     
     # get identity from request params and store in session
     # delete from session on logout
-    identity = request.args.get('openid.identity', '')
+    identity = request.args.get('openid.ext1.value.email', '')
     session['identity'] = identity
     
     # check to see if user exists in mongo
@@ -71,6 +80,8 @@ def login_auth():
     if '_id' not in user:
         # user is brand new, save new user to mongo
         user['_id'] = identity
+        user['firstname'] = request.args.get('openid.ext1.value.firstname', '')
+        user['lastname'] = request.args.get('openid.ext1.value.lastname', '')
         users.save(user)
     
     # create oauth consumer
