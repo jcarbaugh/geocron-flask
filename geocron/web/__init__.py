@@ -32,9 +32,12 @@ def hello():
         l = Latitude(session['access_token'], session['access_secret'])
         content = l.current_location()
     else:
-        content = "asdfasdf"
+        content = ""
     
-    return render_template('base.html', content=content)
+    if g.user == None:
+        return render_template('hello.html', content=content)
+    else:
+        return render_template('rules.html')
 
 @application.route("/users")
 def user_list():

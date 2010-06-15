@@ -1,0 +1,84 @@
+body {
+    background-color: #97deff;
+    color: white;
+    font-family: "Molengo", "Lucida Grande", "Helvetica Neue", "Helvetica", sans-serif;
+    font-size: 16px;
+    line-height: 1.4em;
+}
+
+a {
+  color: #fff;
+  text-decoration: underline;
+  border: none;
+}
+
+p {
+  font-size: 0.95em;
+  margin: 1.0em 0px;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 1em 10px;
+  font-weight: bold;
+}
+
+h1 { font-size: 2.0em; line-height: 1.1em; }
+h2 { font-size: 1.8em;}
+h3 { font-size: 1.6em;}
+h4 { font-size: 1.4em;}
+h5 { font-size: 1.2em;}
+
+nav {
+    text-align: right;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav li {
+    display: inline;
+}
+
+
+header, footer {
+    text-align: center;
+}
+
+div.content_wrapper {
+    background-color: white;
+}
+
+div.content {
+    background-color: white;
+
+    color: #444;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px; 
+}
+
+div.content p, div.content img {
+    margin: 10px 10px;
+}
+
+div.content a {
+    color: #444;
+}
+
+a.button {
+    color: #444;
+    text-decoration: none;
+    border: 1px solid #444;
+    padding: 5px 5px 5px 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background: #efefef;
+}
+footer {
+    color: #555;
+}
+span.blood {
+    color: #d10000;
+}
