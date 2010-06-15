@@ -1,24 +1,52 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<title>HTML 5 complete</title>
-		<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-		<style>
-			article, aside, details, figcaption, figure, footer, header,
-			hgroup, menu, nav, section { display: block; }
-		</style>
-	</head>
-	<body>
-		<nav>
-			<ul>
-				<li><a href="/login">Login</a></li>
-				<li><a href="/logout">Logout</a></li>
-			</ul>
-		</nav>
-		<p>{{ content }}</p>
-		{% block content %}
-		
-		{% endblock %}
-	</body>
+    <head>
+        
+        <meta charset="utf-8" />
+        <title>cron jobs for your life | geocron</title>
+
+        <link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/static/reset.css" />
+        <link rel="stylesheet" href="/static/960.css" />
+        <link rel="stylesheet" href="/static/main.css" />
+
+        <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+        
+    </head>
+    
+    <body>
+        
+        <nav class="container_12">
+            <div class="grid_12">
+            <ul>
+                <li><a href="/login">Login</a>&nbsp;|</li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+            </div>
+        </nav>
+
+        <header class="container_12">
+            <div class="grid_12">
+                <a href="/"><img src="/static/logo.png" alt="geocron.us" width="400" /></a>
+            </div>
+        </header>
+        
+        <div class="content_wrapper">
+        <div class="container_12">
+            <div class="content grid_12">
+            {{ content }}
+            {% block content %}
+            
+            {% endblock %}
+            </div>
+        </div>
+        </div>
+
+        <footer class="container_12">
+            <div class="grid_12">
+                <p>A project of <span class="blood">Blood</span> Monkey. Copyright &copy; 2010.</p>
+            </div>
+        </footer>
+        
+    </body>
 </html>
