@@ -14,8 +14,8 @@ if not settings.DEBUG:
     mail_handler.setLevel(logging.ERROR)
     application.logger.addHandler(mail_handler)
     
-    from logging.handlers import FileHandler
-    file_handler = FileHandler("/tmp/geocron.log")
+    from logging.handlers import WatchedFileHandler
+    file_handler = WatchedFileHandler("/tmp/geocron.log")
     file_handler.setLevel(logging.WARNING)
     application.logger.addHandler(file_handler)
 
