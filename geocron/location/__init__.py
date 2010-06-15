@@ -3,6 +3,11 @@ import httplib
 import oauth2 as oauth
 import urllib
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 RESOURCE_DOMAIN = "www.googleapis.com"
 
 class Latitude(object):
@@ -22,21 +27,22 @@ class Latitude(object):
         oauth_request.sign_request(oauth.SignatureMethod_HMAC_SHA1(), consumer, token)
 
         headers = oauth_request.to_header(realm='http://*.geocron.us')
-        #headers['Accept-Encoding'] = 'compress, gzip'
 
         if params:
-            resource_url = "%s?%s" % (resource_url, urllib.urlencode(parameters))
+            resource_url = "%s?%s" % (resource_url, urllib.urlencode(params))
 
         self._conn.request('GET', resource_url, headers=headers)
         response = self._conn.getresponse()
-        return response.read()
+        return json.loads(response.read())
     
     def current_location(self):    
         return self._invoke("/latitude/v1/currentLocation")
     
-    def locations(self, max_results=100):
+    def locations(self, granularity=None, max_results=100):
+        if not granularity:
+            granularity = 'city'
         return self._invoke("/latitude/v1/location", {
-            'granularity': 'city',
+            'granularity': granularity,
             'max-results': 100,
         })
 

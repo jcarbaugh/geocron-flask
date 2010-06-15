@@ -1,10 +1,9 @@
 
-from settings import *
+from geocron import settings
 from pymongo import Connection
 from datetime import datetime
-from actions import *
-connection = Connection(HOST, PORT)
-db = connection[DATABASE_NAME]
+connection = Connection(settings.MONGODB_HOST, settings.MONGODB_PORT)
+db = connection[settings.MONGODB_DB]
 
 #Python has a bug(gasp!) that doesn't allow unicode characters in keys of dicts that are expanded using the **kwargs notation. 
 #I guess the keys get converted in the pymongo wrapper, so we use this function to convert back
