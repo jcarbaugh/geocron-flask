@@ -44,37 +44,6 @@ def hello():
         user = rules.get_user(g.user['_id'])
         return render_template('rules.html',user=user)
 
-@application.route("/users")
-def user_list():
-    users = g.db.users.find()
-    return render_template('user_list.html', users=users)
-
-@application.route("/users/<identity>")
-def user_detail(identity):
-    user = g.db.users.find_one({'_id': identity})
-    return render_template('user_detail.html', user=user)
-
-@application.route("/checkin", methods=['GET', 'POST'])
-def checkin():
-    if request.method == 'POST':
-        identity = request.form['identity']
-        location = {
-            'kind': 'latitude#location',
-            'latitude': float(request.form['latitude']),
-            'longitude': float(request.form['longitude']),
-            'accuracy': int(request.form['accuracy']),
-            'timestampMs': int(time.time() * 1000),
-        }
-        user = g.db.users.find_one({'_id': identity})
-        if 'locations' not in user:
-            user['locations'] = []
-        user['locations'].insert(0, location)
-        g.db.users.save(user)
-        rules.check(identity, (location['latitude'], location['longitude']))
-        return redirect(url_for('user_detail', identity=user['_id']))
-    else:
-        return render_template('checkin.html')
-
 @application.route("/save_rule", methods=['POST'])
 def save_rule():
     
@@ -127,3 +96,40 @@ def save_rule():
     
     rules.set_rule(g.user['_id'], **rule)
     return redirect(url_for('hello'))
+
+# admin stuff    
+
+@application.route("/admin")
+def admin():
+    return render_template('admin/base.html')
+
+@application.route("/admin/users")
+def user_list():
+    users = g.db.users.find()
+    return render_template('admin/user_list.html', users=users)
+
+@application.route("/admin/users/<identity>")
+def user_detail(identity):
+    user = g.db.users.find_one({'_id': identity})
+    return render_template('admin/user_detail.html', user=user)
+
+@application.route("/admin/checkin", methods=['GET', 'POST'])
+def checkin():
+    if request.method == 'POST':
+        identity = request.form['identity']
+        location = {
+            'kind': 'latitude#location',
+            'latitude': float(request.form['latitude']),
+            'longitude': float(request.form['longitude']),
+            'accuracy': int(request.form['accuracy']),
+            'timestampMs': int(time.time() * 1000),
+        }
+        user = g.db.users.find_one({'_id': identity})
+        if 'locations' not in user:
+            user['locations'] = []
+        user['locations'].insert(0, location)
+        g.db.users.save(user)
+        rules.check(identity, (location['latitude'], location['longitude']))
+        return redirect(url_for('user_detail', identity=user['_id']))
+    else:
+        return render_template('admin/checkin.html')

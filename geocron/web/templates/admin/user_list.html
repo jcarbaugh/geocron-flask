@@ -1,10 +1,11 @@
-{% extends "base.html" %}
+{% extends "admin/base.html" %}
 
 {% block content %}
+	{{ super() }}
     <ul>
         {% for user in users %}
             <li>
-                <a href="/users/{{ user._id }}">{{ user._id }}</a>
+                <a href="/admin/users/{{ user._id }}">{{ user._id }}</a>
             </li>
         {% endfor %}
     </ul>
