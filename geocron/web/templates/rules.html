@@ -11,7 +11,7 @@
                 <th>When</th>
                 <th>What</th>
                 <th>Save</th>
-            </tr>
+            </tr>            
             <tr class="map_row">
                 <td colspan="5">
                     <div id="map_canvas" class="map"></div>
@@ -31,7 +31,7 @@
                 </td>
                 <td>
                     <select name="days" id="days">
-                        <option value="every">Every Day</option>
+                        <option value="everyday">Every Day</option>
                         <option value="weekdays">Weekdays</option>
                         <option value="weekends">Weekends</option>
                     </select><br />
@@ -60,6 +60,15 @@
                 </td>
             </form>
             </tr>
+            {% for rule in user['rules'] %}
+            <tr>
+                <td>{{ rule.name }}</td>
+                <td>{{ rule.address }} {{ rule.location[0] }}/{{ rule.location[1] }}</td>
+                <td>{{ rule.days }} - {{ rule.times }}</td>
+                <td>{{ rule.action_type }} to {{ rule.recipient|truncate(30) }}</td>
+                <td>&nbsp;</td>
+            </tr>
+            {% endfor %}
         </table>
     </div>
 {% endblock %}

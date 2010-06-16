@@ -133,8 +133,8 @@ def test_location(current_location, **rule):
     #Haversine Formula - Calculate distance between two points based on longitude, latitude, and the average radius of the earth
     lat1 = math.radians(current_location[0])
     lon1 = math.radians(current_location[1])
-    lat2 = math.radians(rule['location'][0])
-    lon2 = math.radians(rule['location'][1])
+    lat2 = math.radians(float(rule['location'][0]))
+    lon2 = math.radians(float(rule['location'][1]))
 
     earth_radius = 6371000 #meters
 

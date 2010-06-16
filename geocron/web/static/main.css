@@ -72,7 +72,7 @@ div.content label {
     width: 65px;
     font-size: 0.9em;
 }
-span.label {
+span.label, td {
     font-size: 0.9em;
 }
 div.content a {

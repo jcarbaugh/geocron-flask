@@ -80,6 +80,7 @@ def login_auth():
     if '_id' not in user:
         # user is brand new, save new user to mongo
         user['_id'] = identity
+        user['email'] = identity
         user['firstname'] = request.args.get('openid.ext1.value.firstname', '')
         user['lastname'] = request.args.get('openid.ext1.value.lastname', '')
         users.save(user)

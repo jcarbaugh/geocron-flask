@@ -41,7 +41,8 @@ def hello():
     if g.user == None:
         return render_template('hello.html', content=content)
     else:
-        return render_template('rules.html')
+        user = rules.get_user(g.user['_id'])
+        return render_template('rules.html',user=user)
 
 @application.route("/users")
 def user_list():
@@ -73,3 +74,56 @@ def checkin():
         return redirect(url_for('user_detail', identity=user['_id']))
     else:
         return render_template('checkin.html')
+
+@application.route("/save_rule", methods=['POST'])
+def save_rule():
+    
+    rule = {
+        'name': request.form['name'],
+        'location': [request.form['latitude'], request.form['longitude']],
+        'action_type': request.form['action_type'],
+        'days': request.form['days'],
+        'times': request.form['times'],
+        'address': request.form['location'],
+        'recipient': request.form['recipient']
+    }
+    
+    if request.form['action_type'] == 'email':
+        rule['email_address'] = request.form['recipient']
+        rule['email_text'] = request.form['message']
+    elif request.form['action_type'] == 'webhook':
+        rule['method'] = 'POST'
+        rule['callback_url'] = request.form['recipient']
+    elif request.form['action_type'] == 'sms':
+        rule['phone_number'] = request.form['recipient']
+        rule['phone_carrier'] = request.form['carrier']
+        rule['sms'] = request.form['message']
+
+    if request.form['days'] == 'everyday':
+        rule['valid_days'] = [0,1,2,3,4,5,6]
+    elif request.form['days'] == 'weekdays':
+        rule['valid_days'] = [1,2,3,4,5]
+    elif request.form['days'] == 'weekends':
+        rule['valid_days'] = [0,6]
+
+    if request.form['times'] == 'anytime':
+        rule['valid_start_time'] = '00:00'
+        rule['valid_end_time'] = '00:00'
+    elif request.form['times'] == 'day':
+        rule['valid_start_time'] = '07:00'
+        rule['valid_end_time'] = '07:00'
+    elif request.form['times'] == 'morning':
+        rule['valid_start_time'] = '06:00'
+        rule['valid_end_time'] = '12:00'
+    elif request.form['times'] == 'afternoon':
+        rule['valid_start_time'] = '12:00'
+        rule['valid_end_time'] = '00:00'
+    elif request.form['times'] == 'evening':
+        rule['valid_start_time'] = '04:00'
+        rule['valid_end_time'] = '00:00'
+    elif request.form['times'] == 'overnight':
+        rule['valid_start_time'] = '19:00'
+        rule['valid_end_time'] = '07:00'
+    
+    rules.set_rule(g.user['_id'], **rule)
+    return redirect(url_for('hello'))
