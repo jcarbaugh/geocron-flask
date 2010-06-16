@@ -3,6 +3,7 @@
 {% block content %}
 	<a href="/users">&lt;&lt; User list</a>
     <h2>{{ user._id }}</h2>
+	<h3>Location History</h3>
 	<ol>
 		{% for location in user.locations %}
 			<li>
@@ -11,4 +12,21 @@
 			</li>
 		{% endfor %}
 	</ol>
+	<h3>Rules</h3>
+	<ul>
+		{% for rule in user.rules %}
+			<li>
+				<h4>{{ rule.name }}</h4>
+				<p>{{ rule.address }} ({{ rule.location.0 }}, {{ rule.location.1 }})</p>
+				{% if rule.action_type == "email" %}
+					<p>
+						Send email to <em>{{ rule.email_address }}</em> containing:
+						<blockquote>{{ rule.email_text }}</blockquote>
+					</p>
+				{% endif %}
+				<p>
+				{{ rule }}
+			</li>
+		{% endfor %}
+	</ul>
 {% endblock %}

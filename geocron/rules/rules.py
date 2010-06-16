@@ -117,17 +117,21 @@ def test_time(**rule):
     current_time = datetime.now()
     if rule.has_key('valid_days'):
         if current_time.weekday() not in rule['valid_days']:
+            print "failed valid_days"
             return False
 
     if rule.has_key('valid_start_time'):
         time = rule['valid_start_time']
         if current_time.hour < int(time.split(':')[0]) and current_time.minute < int(time.split(':')[1]):
+            print "failed valid_start_time"
             return False
 
     if rule.has_key('valid_end_time'):
         time = rule['valid_end_time']
-        if current_time.hour > int(time.split(':')[0]) and current_time.minute > int(time.split(':')[1]):
-            return False
+        if time != '00:00':
+            if current_time.hour > int(time.split(':')[0]) and current_time.minute > int(time.split(':')[1]):
+                print "failed valid_end_time"
+                return False
     
     return True
 
@@ -163,6 +167,7 @@ def check(email, current_location):
         for r in user['rules']:
             if test_location(current_location, **convert_from_unicode(r)) and test_time(**convert_from_unicode(r)):
                 #do action
+                print "---- calling action:", r
                 execute_action(email, **convert_from_unicode(r))
 
     else:
