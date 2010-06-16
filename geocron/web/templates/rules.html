@@ -4,6 +4,7 @@
     <div class="grid_12">
         <h1>Ruleset for {{ g.user['firstname'] }} {{ g.user['lastname'] }}</h1>
         
+        <div id="map_canvas" class="map" style="left:-9999px;position:absolute;"></div>
         <table>
             <tr>
                 <th>Name</th>
@@ -15,11 +16,10 @@
             <tr class="new_rule">
             <form action="/save_rule" method="post">
                 <td>
-                    <input type="text" name="name" length="25" />
+                    <input type="text" name="name" />
                 </td>
                 <td>
-                    <div id="map_canvas" class="map" style="display:none;"></div>
-                    <input type="text" name="location" id="location" length="30" /><br />
+                    <input type="text" name="location" id="location" /><br />
                     <input type="button" name="location_check" value="Map Address" id="location_check" />
                     <input type="hidden" name="latitude" id="lat"/>
                     <input type="hidden" name="longitude" id="lon"/>
@@ -101,8 +101,6 @@
         if (GBrowserIsCompatible()) {
             $(document).bind('unload', GUnload);
             
-            $('#map_canvas').hide();
-            
             map = new GMap2(document.getElementById("map_canvas"));
             map.setCenter(new GLatLng(38.890370, -77.031959), 10);
             map.setUIToDefault();
@@ -116,8 +114,11 @@
             
             $('#location_check').bind('click', function(e){
                 showAddress(placeInput.val());
-                $('#map_canvas').overlay({
-                    load: true
+                $('#map_canvas').css({
+                    'position': 'relative',
+                    'left': 0,
+                    'margin-left': 'auto',
+                    'margin-right': 'auto'
                 });
             });
         }
