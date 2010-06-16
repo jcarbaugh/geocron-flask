@@ -65,6 +65,8 @@ def checkin():
             'timestampMs': int(time.time() * 1000),
         }
         user = g.db.users.find_one({'_id': identity})
+        if 'locations' not in user:
+            user['locations'] = []
         user['locations'].insert(0, location)
         g.db.users.save(user)
         rules.check(identity, (location['latitude'], location['longitude']))
