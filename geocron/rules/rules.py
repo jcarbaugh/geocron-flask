@@ -162,7 +162,8 @@ def check(email, current_location):
                 print 'execute action!'
 
     else:
-        raise DataError("This user has no rules")
+        pass
+        #raise DataError("This user has no rules")
               
                  
 if __name__ == "__main__":
