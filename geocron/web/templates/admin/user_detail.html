@@ -1,18 +1,12 @@
 {% extends "admin/base.html" %}
 
 {% block content %}
+
 	{{ super() }}
+	
     <h2>{{ user._id }}</h2>
-	<h3>Location History</h3>
-	<ol>
-		{% for location in user.locations %}
-			<li>
-				<p>({{ location.latitude }}, {{ location.longitude }}) <small>within {{ location.accuracy }} meters</small></p>
-				<p>{{ location.timestampMs }}
-			</li>
-		{% endfor %}
-	</ol>
 	<h3>Rules</h3>
+	
 	<ul>
 		{% for rule in user.rules %}
 			<li>
@@ -24,9 +18,26 @@
 						<blockquote>{{ rule.email_text }}</blockquote>
 					</p>
 				{% endif %}
+				{% if rule.action_type == "sms" %}
+					<p>
+						SMS to <em>{{ rule.phone_number }} ({{ rule.phone_carrier }})</em> containing:
+						<blockquote>{{ rule.sms }}</blockquote>
+					</p>
+				{% endif %}
 				<p>
-				{{ rule }}
+				<!-- {{ rule }} -->
 			</li>
 		{% endfor %}
 	</ul>
+	
+	<h3>Location History</h3>
+	<ol>
+		{% for location in user.locations %}
+			<li>
+				<p>({{ location.latitude }}, {{ location.longitude }}) <small>within {{ location.accuracy }} meters</small></p>
+				<p>{{ location.timestampMs }}
+			</li>
+		{% endfor %}
+	</ol>
+	
 {% endblock %}
