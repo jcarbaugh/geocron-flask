@@ -45,25 +45,35 @@ header, footer {
     text-align: center;
 }
 
-div.content_wrapper {
-    background-color: white;
-}
-
 div.content {
     background-color: white;
-
     color: #444;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px; 
 }
 
-div.content p, div.content img {
+div.content p, div.content img, div.content table {
     margin: 10px 10px;
 }
 
+
+div.content table td {
+    padding: 10px 15px 10px 15px;
+    border-bottom: 1px solid #999;
+}
+div.content label {
+    display: block;
+    float: left;
+    width: 65px;
+}
 div.content a {
     color: #444;
+}
+
+div.map {
+    width: 800px;
+    height: 600px;
 }
 
 a.button {

@@ -3,5 +3,127 @@
 {% block content %}
     <div class="grid_12">
         <h1>Ruleset for {{ g.user['firstname'] }} {{ g.user['lastname'] }}</h1>
+        
+        <div id="map_canvas" class="map" style="left:-9999px;position:absolute;"></div>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Where</th>
+                <th>When</th>
+                <th>What</th>
+                <th>Save</th>
+            </tr>
+            <tr class="new_rule">
+            <form action="/save_rule" method="post">
+                <td>
+                    <input type="text" name="name" />
+                </td>
+                <td>
+                    <input type="text" name="location" id="location" /><br />
+                    <input type="button" name="location_check" value="Map Address" id="location_check" />
+                    <input type="hidden" name="latitude" id="lat"/>
+                    <input type="hidden" name="longitude" id="lon"/>
+                </td>
+                <td>
+                    <select name="days" id="days">
+                        <option value="every">Every Day</option>
+                        <option value="weekdays">Weekdays</option>
+                        <option value="weekends">Weekends</option>
+                    </select><br />
+                    <select name="times" id="times">
+                        <option value="anytime">Anytime</option>
+                        <option value="day">All Day (7am - 7pm)</option>
+                        <option value="morning">Morning (6am - noon)</option>
+                        <option value="afternoon">Afternoon (noon - midnight)</option>
+                        <option value="evening">Evening (4pm - midnight)</option>
+                        <option value="overnight">Overnight (7pm - 7am)</option>
+                    </select><br />
+                </td>
+                <td>
+                    <label>Send: </label>
+                    <select name="action_type" id="action_type">
+                        <option value="email">Email</option>
+                        <option value="webhook">Webhook POST</option>
+                    </select><br />
+                    <label>To: </label>
+                    <input type="text" name="recipient" length="30" /><br />
+                    <label>Message: </label>
+                    <input type="text" name="message" length="30" />
+                </td>
+                <td>
+                    <input type="submit" value="Create Rule" />
+                </td>
+            </form>
+            </tr>
+        </table>
     </div>
+{% endblock %}
+
+{% block bottombody %}
+
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAl-g6dlC1NBg81pUgiwXkbBS8KdGWqJhyaHdLG3WdSXnqw6pKTBSxWFGjyvj78p3SjpN5Nm0T6RlmjA" type="text/javascript"></script>
+<script type="text/javascript">
+    var map = null;
+    var geocoder = null;
+    var marker = null;
+    
+    function setHiddenValues(point) {
+        $('#lon').val(point.x);
+        $('#lat').val(point.y);
+        geocoder.getLocations(point, function(response){
+            $('#location').val(response.Placemark[0].address);
+        });
+    }
+    
+    function showAddress(address) {
+        geocoder.getLatLng(
+            address,
+            function(point) {
+                if (!point) {
+                    alert(address + " not found");
+                } else {
+                    if(marker) marker.hide();
+                    map.setCenter(point, 15);
+                    marker = new GMarker(point, { draggable: true });
+                    
+                    GEvent.addListener(marker, "dragend", function(){
+                        setHiddenValues(marker.getLatLng());
+                    });
+                    
+                    map.addOverlay(marker);
+                    setHiddenValues(point);
+                }
+            }
+        );
+    }
+    
+    $(function(){
+        if (GBrowserIsCompatible()) {
+            $(document).bind('unload', GUnload);
+            
+            map = new GMap2(document.getElementById("map_canvas"));
+            map.setCenter(new GLatLng(38.890370, -77.031959), 10);
+            map.setUIToDefault();
+            geocoder = new GClientGeocoder();
+            
+            var placeInput = $('#location');
+            placeInput.bind('blur', function(e){
+                showAddress(placeInput.val());
+            });
+            if(placeInput.val().length > 0) showAddress(placeInput.val());
+            
+            $('#location_check').bind('click', function(e){
+                showAddress(placeInput.val());
+                $('#map_canvas').css({
+                    'position': 'relative',
+                    'left': 0,
+                    'margin-left': 'auto',
+                    'margin-right': 'auto'
+                });
+            });
+        }
+    });
+
+</script>
+
 {% endblock %}

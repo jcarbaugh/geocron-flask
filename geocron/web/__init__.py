@@ -3,8 +3,10 @@ from geocron import settings
 from geocron.location import Latitude
 from geocron.rules import rules
 from geocron.web.auth import auth
+from geocron.rules import rules
 from pymongo import Connection
 import time
+
 
 application = Flask(__name__)
 application.register_module(auth)
