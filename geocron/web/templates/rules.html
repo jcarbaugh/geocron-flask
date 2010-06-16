@@ -48,12 +48,27 @@
                     <label>Send: </label>
                     <select name="action_type" id="action_type">
                         <option value="email">Email</option>
+                        <option value="sms">SMS</option>
                         <option value="webhook">Webhook POST</option>
+
                     </select><br />
                     <label>To: </label>
                     <input type="text" name="recipient" length="30" /><br />
+                    <div id="what_message">
                     <label>Message: </label>
                     <input type="text" name="message" length="30" />
+                    </div>
+                    <div id="what_carrier" style="display:none;">
+                    <label>Carrier: </label>
+                    <select name="carrier" id="carrier">
+                        <option value="att">AT&amp;T</option>
+                        <option value="boost">Boost</option>
+                        <option value="sprint">Sprint</option>
+                        <option value="tmobile">T-Mobile</option>
+                        <option value="verizon">Verizon</option>
+                        <option value="virgin">Virgin</option>
+                    </select>
+                    </div>
                 </td>
                 <td>
                     <input type="submit" value="Create Rule" />
@@ -63,9 +78,9 @@
             {% for rule in user['rules'] %}
             <tr>
                 <td>{{ rule.name }}</td>
-                <td>{{ rule.address }} {{ rule.location[0] }}/{{ rule.location[1] }}</td>
+                <td>{{ rule.address|truncate(20,true) }}</td>
                 <td>{{ rule.days }} - {{ rule.times }}</td>
-                <td>{{ rule.action_type }} to {{ rule.recipient|truncate(30) }}</td>
+                <td>{{ rule.action_type }} to {{ rule.recipient|truncate(20,true) }}</td>
                 <td>&nbsp;</td>
             </tr>
             {% endfor %}
@@ -112,6 +127,22 @@
     }
     
     $(function(){
+        
+        $('select#action_type').change(function() {
+           if (this.value == 'email') {
+               $('div#what_message').show();
+               $('div#what_carrier').hide();
+           }
+           if (this.value == 'sms') {
+               $('div#what_message').show();
+               $('div#what_carrier').show();
+           }
+           if (this.value == 'webhook') {
+               $('div#what_message').hide();
+               $('div#what_carrier').hide();
+           }
+        });
+        
         if (GBrowserIsCompatible()) {
             $(document).bind('unload', GUnload);
             
