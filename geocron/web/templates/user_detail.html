@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {{ user }}
+	<a href="/users">&lt;&lt; User list</a>
+    <h2>{{ user._id }}</h2>
+	<ol>
+		{% for location in user.locations %}
+			<li>
+				<p>({{ location.latitude }}, {{ location.longitude }}) <small>within {{ location.accuracy }} meters</small></p>
+				<p>{{ location.timestampMs }}
+			</li>
+		{% endfor %}
+	</ol>
 {% endblock %}

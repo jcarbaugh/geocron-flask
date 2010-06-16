@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {{ g.user|pprint }}
     <ul>
         {% for user in users %}
             <li>
-                {{ user|pprint }}
+                <a href="/users/{{ user._id }}">{{ user._id }}</a>
             </li>
         {% endfor %}
     </ul>

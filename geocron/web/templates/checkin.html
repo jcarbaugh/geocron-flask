@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="grid_4 alpha">
+		<form action="/checkin" method="post">
+			<ul>
+				<li>
+					<label for="identity">Identity</label>
+					<input type="email" name="identity" id="identity" value="{% if g.user %}{{ g.user._id }}{% endif %}">
+				</li>
+				<li>
+					<label for="latitude">Latitude</label>
+					<input type="text" name="latitude" id="latitude">
+				</li>
+				<li>
+					<label for="longitude">Longitude</label>
+					<input type="text" name="longitude" id="longitude">
+				</li>
+				<li>
+					<label for="accuracy">Accuracy</label>
+					<input type="text" name="accuracy" id="accuracy" value="75">
+				</li>
+			</ul>
+			<input type="submit" value="Checkin">
+		</form>
+    </div>
+	<div class="grid_8 omega">
+		<div id="map" style="height: 400px; width: 100%;"></div>
+	</div>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	<script>
+		var initMap = function(lat, lng) {
+			var latlng = new google.maps.LatLng(lat, lng);
+			var myOptions = {
+				zoom: 15,
+				center: latlng,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+			var map = new google.maps.Map(document.getElementById("map"), myOptions);
+			var marker = new google.maps.Marker({
+				position: latlng,
+				map: map,
+				draggable: true,
+				title:"You are here",
+			});
+			google.maps.event.addListener(marker, 'dragend', function() {
+				var ll = marker.getPosition();
+				map.panTo(ll);
+				document.getElementById('latitude').value = ll.lat();
+				document.getElementById('longitude').value = ll.lng();
+			});	
+			document.getElementById('latitude').value = latlng.lat();
+			document.getElementById('longitude').value = latlng.lng();
+		};
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				initMap(position.coords.latitude, position.coords.longitude);
+			});
+		} else {
+			initMap(-34.397, 150.644);
+		}
+	</script>
+{% endblock %}
