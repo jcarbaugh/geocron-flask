@@ -12,6 +12,9 @@ db = connection[settings.MONGODB_DB]
 class ValidationError(DataError):
     pass
 
+class UserError(DataError):
+    pass
+
 #Python has a bug(gasp!) that doesn't allow unicode characters in keys of dicts that are expanded using the **kwargs notation. 
 #I guess the keys get converted in the pymongo wrapper, so we use this function to convert back
 def convert_from_unicode(data):
@@ -60,7 +63,7 @@ def get_user(email):
     users = db.users
     user = users.find_one({"email": email})
     if not user:
-        print "no user found with email: %s" % email
+        raise UserError("no user found with email: %s" % email)
         user = users.find_one({"_id": users.insert({"email":email})})
     
     return user
@@ -145,8 +148,10 @@ def test_location(current_location, **rule):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     distance = earth_radius * c
 
-    print "distance: %s" % distance
-    if distance <= 300:
+    limit = 300
+    if rule.has_key('accuracy'):
+        limit = rule['accuracy']
+    if distance <= limit:
         return True
     else:
         return False
@@ -159,19 +164,16 @@ def check(email, current_location):
             if test_location(current_location, **convert_from_unicode(r)) and test_time(**convert_from_unicode(r)):
                 #do action
                 execute_action(email, **convert_from_unicode(r))
-                print 'execute action!'
 
     else:
         pass
         #raise DataError("This user has no rules")
               
                  
-if __name__ == "__main__":
+#if __name__ == "__main__":
 
-    #delete_rule('katycorp@gmail.com', 'send one email')
+    #msg = update_rule("katycorp@gmail.com", "ama test", name="ama test", phone_number=8605935117, phone_carrier='att', sms='HEEEYYY', action_type="sms", location=[38.993496, -77.032399], valid_days=[1,2,3,4,5], valid_start_time='12:00', valid_end_time='20:00', accuracy=177)
+    
+    #check('katycorp@gmail.com', [38.991929, -77.032228])
 
-    msg = update_rule("katycorp@gmail.com", "url test",  name="ama test", phone_number=8605935117, phone_carrier='att', sms='HEEEYYY', action_type="sms", location=[38.993496, -77.032399], valid_days=[1,2,3,4,5], valid_start_time='12:00', valid_end_time='20:00')
-    #print msg
-
-    check('katycorp@gmail.com', [38.991929, -77.032228])
 
