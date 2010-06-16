@@ -2,7 +2,9 @@ from flask import Flask, g, render_template, session
 from geocron import settings
 from geocron.location import Latitude
 from geocron.web.auth import auth
+from geocron.rules import rules
 from pymongo import Connection
+
 
 application = Flask(__name__)
 application.register_module(auth)
