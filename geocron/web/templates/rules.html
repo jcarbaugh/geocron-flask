@@ -3,8 +3,7 @@
 {% block content %}
     <div class="grid_12">
         <h1>Ruleset for {{ g.user['firstname'] }} {{ g.user['lastname'] }}</h1>
-        
-        <div id="map_canvas" class="map" style="left:-9999px;position:absolute;"></div>
+
         <table>
             <tr>
                 <th>Name</th>
@@ -12,6 +11,11 @@
                 <th>When</th>
                 <th>What</th>
                 <th>Save</th>
+            </tr>
+            <tr class="map_row">
+                <td colspan="5">
+                    <div id="map_canvas" class="map"></div>
+                </td>
             </tr>
             <tr class="new_rule">
             <form action="/save_rule" method="post">
@@ -21,6 +25,7 @@
                 <td>
                     <input type="text" name="location" id="location" /><br />
                     <input type="button" name="location_check" value="Map Address" id="location_check" />
+                    <span class="label"><a href="#" id="close_map">Close</a></span>
                     <input type="hidden" name="latitude" id="lat"/>
                     <input type="hidden" name="longitude" id="lon"/>
                 </td>
@@ -119,7 +124,10 @@
                     'left': 0,
                     'margin-left': 'auto',
                     'margin-right': 'auto'
-                });
+                }).show();
+            });
+            $('a#close_map').click(function(){
+               $('#map_canvas').hide(); 
             });
         }
     });
