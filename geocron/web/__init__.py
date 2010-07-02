@@ -2,11 +2,10 @@ from flask import Flask, g, redirect, render_template, request, session, url_for
 from geocron import settings
 from geocron.location import Latitude
 from geocron.rules import rules
-from geocron.web.auth import auth
+from geocron.web.auth import auth, UserValidator
 from geocron.rules import rules
 from pymongo import Connection
 import time
-
 
 application = Flask(__name__)
 application.register_module(auth)
@@ -20,6 +19,8 @@ def before_request():
     g.db = conn.geocron
     if 'identity' in session:
         g.user = g.db.users.find_one({'_id': session['identity']})
+        g.user_is_admin = g.user['email'] in settings.ADMINS
+        g.user_is_valid = g.user['email'] in settings.VALID_USERS
     else:
         g.user = None
     
@@ -27,22 +28,19 @@ def before_request():
 def after_request(response):
     return response
 
+basic_user_validator = UserValidator()
+hello_user_validator = UserValidator('hello.html')
+
 # application
 
 @application.route("/")
+@hello_user_validator.is_valid
 def hello():
-    
-    if 'access_token' in session and 'access_secret' in session:
-        l = Latitude(session['access_token'], session['access_secret'])
-        content = l.current_location()
-    else:
-        content = ""
-    
     if g.user == None:
-        return render_template('hello.html', content=content)
+        return render_template('hello.html')
     else:
         user = rules.get_user(g.user['_id'])
-        return render_template('rules.html',user=user)
+        return render_template('rules.html', user=user)
 
 @application.route("/save_rule", methods=['POST'])
 def save_rule():
@@ -100,20 +98,24 @@ def save_rule():
 # admin stuff    
 
 @application.route("/admin")
+@basic_user_validator.is_admin
 def admin():
     return render_template('admin/base.html')
-
-@application.route("/admin/users")
+    
+@application.route("/admin/users")    
+@basic_user_validator.is_admin
 def user_list():
     users = g.db.users.find()
     return render_template('admin/user_list.html', users=users)
 
-@application.route("/admin/users/<identity>")
+@application.route("/admin/users/<identity>")    
+@basic_user_validator.is_admin
 def user_detail(identity):
     user = g.db.users.find_one({'_id': identity})
     return render_template('admin/user_detail.html', user=user)
 
 @application.route("/admin/checkin", methods=['GET', 'POST'])
+@basic_user_validator.is_admin
 def checkin():
     if request.method == 'POST':
         identity = request.form['identity']

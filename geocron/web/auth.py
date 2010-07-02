@@ -1,4 +1,5 @@
 from flask import Module, g, redirect, render_template, request, session
+from functools import wraps
 from geocron import settings
 from openid.consumer.consumer import Consumer
 from openid.store.filestore import FileOpenIDStore
@@ -23,6 +24,24 @@ OPENID_CALLBACK_URL = REALM + "login/auth"
 OAUTH_CALLBACK_URL = REALM + "login/complete"
 
 auth = Module(__name__)
+
+class UserValidator(object):
+    def __init__(self, template=None):
+        self.template = template or '403.html'
+    def is_valid(self, f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            if g.user and g.user_is_valid:
+                return f(*args, **kwargs)
+            return render_template(self.template)
+        return decorated
+    def is_admin(self, f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            if g.user and g.user_is_admin:
+                return f(*args, **kwargs)
+            return render_template(self.template)
+        return decorated
 
 @auth.route('/login')
 def login():
