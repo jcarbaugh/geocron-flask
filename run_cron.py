@@ -27,7 +27,7 @@ if __name__ == "__main__":
             latitude = Latitude(oauth['token'], oauth['secret'])
             location = latitude.current_location()
             
-            if location:
+            if location and 'data' in location:
             
                 location = location['data']
                 
