@@ -27,7 +27,7 @@ if __name__ == "__main__":
             latitude = Latitude(oauth['token'], oauth['secret'])
             location = latitude.current_location()['data']
                 
-            if location['timestampMs'] not in timestamps:
+            if location['timestampMs'] and location['timestampMs'] not in timestamps:
                 user['locations'].append(location)
                 rules.check(user['_id'], (location['latitude'], location['longitude']))
         
