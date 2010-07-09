@@ -29,7 +29,7 @@ if __name__ == "__main__":
                 
             if location['timestampMs'] not in timestamps:
                 user['locations'].append(location)
-                rules.check(user['_id'], location)
+                rules.check(user['_id'], (location['latitude'], location['longitude']))
         
         users.save(user)
         
