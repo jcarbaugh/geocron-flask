@@ -1,21 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="grid_4 alpha">
-        <h2>Location Aware</h2>
-        <img src="/static/whitehouse.png" width="280px" alt="White House Map" />
-        <p>By combining your present location with the time of day, geocron automates your life. When you get to your Metro station during the commute home, geocron can send a text message reading "Pick me up dear" to your spouse.</p>
-    </div>
-    <div class="grid_4">
-        <h2>Three Questions</h2>
-        <p>Answer three simple questions to set up a geocron rule: <strong>Where</strong> am I? <strong>When</strong> am I there? <strong>What</strong> do I want to happen?</p>
-        <p>By harnessing your location data via <a href="http://www.google.com/latitude/intro.html">Google Latitude</a>, geocron can keep up with you all day. Just set some rules to trigger actions, and you're all set!</p>
-        <p>Right now, you can send emails, text messages, and hit webhooks with geocron.</p>
-    </div>
-    <div class="grid_4 omega">
-        <h2>Get Started</h2>
-        <p>geocron requires a Google Account to log in, and it uses the Google Latitude and Google Places APIs.</p>        
-        <p>You will be redirected to Google's account service to log in. You must enable Google Latitude with your mobile device.</p>
-        <p><a href="/login" class="button">Log in with Google</span></a></p>
-    </div>
+	{% if not g.user %}
+	    <div class="grid_4 alpha">
+	        <h2>Location Aware</h2>
+	        <img src="/static/whitehouse.png" width="280px" alt="White House Map" />
+	        <p>By combining your present location with the time of day, geocron automates your life. When you get to your Metro station during the commute home, geocron can send a text message reading "Pick me up dear" to your spouse.</p>
+	    </div>
+	    <div class="grid_4">
+	        <h2>Three Questions</h2>
+	        <p>Answer three simple questions to set up a geocron rule: <strong>Where</strong> am I? <strong>When</strong> am I there? <strong>What</strong> do I want to happen?</p>
+	        <p>By harnessing your location data via <a href="http://www.google.com/latitude/intro.html">Google Latitude</a>, geocron can keep up with you all day. Just set some rules to trigger actions, and you're all set!</p>
+	        <p>Right now, you can send emails, text messages, and hit webhooks with geocron.</p>
+	    </div>
+	    <div class="grid_4 omega">
+			<h2>Get Started</h2>
+			<p>geocron requires a Google Account to log in, and it uses the Google Latitude and Google Places APIs.</p>        
+			<p>You will be redirected to Google's account service to log in. You must enable Google Latitude with your mobile device.</p>
+			<p><a href="/login" class="button">Log in with Google</span></a></p>
+	    </div>		
+	{% else %}
+		<div class="grid_12">
+			<h2>Sorry, we don't know you.</h2>
+			<p>We've put about two days worth of coding into Geocron so we aren't ready to show it off to the public yet.</p>
+			<p>If you would like to help us test while we continue development, <a href="mailto:jcarbaugh+geocron@sunlightfoundation.com">contact Jeremy</a> and ask to be whitelisted.</p>
+		</div>
+	{% endif %}
 {% endblock %}
